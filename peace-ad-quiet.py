@@ -1,35 +1,29 @@
-import soundcard as sc
-import time
-import numpy as np
-from scipy.io.wavfile import write
+import PySimpleGUI as sg
+from recorder import Recorder
 
-speakers = sc.all_speakers()
-mics = sc.all_microphones(include_loopback=True)
-default_speaker = sc.default_speaker()
-rate = 44100  # Record at 44100 samples per second
-seconds = 3
-# get the current default microphone on your system:
-default_mic = mics[0]
+layout = [
+    [sg.Button("Record")],
+    [sg.Text("Time: ",size= (5,1)), sg.InputText()],
+    [sg.Button("Stop and Save")],]
 
-# for i in range(len(mics)):
-#     try:
-#         print(f"{i}: {mics[i].name}")
-#     except Exception as e:
-#         print(e)
+# Create the window
+window = sg.Window("Audio Capture", layout)
+recorder = Recorder()
+# Create an event loop
+while True:
+    event, values = window.read()
+    # End program if user closes window or
+    if event == sg.WIN_CLOSED:
+        recorder.stopRecording()
+        break
+    # presses the OK button
+    elif event == "Record":
+        window.start_thread(lambda: recorder.startRecording(values[0]),('-THREAD-','-THREAD ENDED'))
+    elif event =="Stop and Save":
+        recorder.stopRecording()
+        recorder.saveAudio()
 
-with default_mic.recorder(samplerate=rate) as mic, \
-            default_speaker.player(samplerate=rate) as sp:
-    #print("Recording...")
-    data = mic.record(numframes=(rate * seconds))
+window.close()
 
-    # print("Done! Pause your audio to hear the playback")
-    # time.sleep(1)
-    # sp.play(data)
 
-timestr = time.strftime("%Y%m%d_%H%M%S")
-filename = f"output_{timestr}.wav"
-filepath = r'C:\Users\Jon\source\repos\peace-ad-quiet\commericals\\' + filename
-scaled = np.int16(data / np.max(np.abs(data)) * 32767) 
-write(filepath, rate, scaled)
-print("File Saved!")
 
