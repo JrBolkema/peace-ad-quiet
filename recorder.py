@@ -2,7 +2,7 @@ import soundcard as sc
 import time
 import numpy as np
 from scipy.io.wavfile import write
-import random
+import constants
 
 
 
@@ -12,10 +12,9 @@ class Recorder:
     # get the current default microphone on your system:
     default_mic = mics[0]
     default_speaker = sc.default_speaker()
-    
-    rate = 44100  # Record at 44100 samples per second
-    seconds = 3
+
     data = []
+    predictionData = []
     recording = False
 
     def listMicrophones(self):
@@ -24,16 +23,22 @@ class Recorder:
                 print(f"{i}: {self.mics[i].name}")
             except Exception as e:
                 print(e)
-                
+    
+    def getRecordingForPrediction(self):
+        with self.default_mic.recorder(samplerate=constants.sample_rate) as mic:
+            data = mic.record(constants.sample_rate * constants.seconds)
+            return data
+        
+
     def startRecording(self,timeToRecord = 0):
         print("Recording Started")
         self.recording = True
-        with self.default_mic.recorder(samplerate=self.rate) as mic:
+        with self.default_mic.recorder(samplerate=constants.sample_rate) as mic:
             if timeToRecord == '':
                 while self.recording:
-                    self.data.extend(mic.record(self.rate))
+                    self.data.extend(mic.record(constants.sample_rate))
             else:
-                self.data.extend(mic.record(self.rate * int(timeToRecord)))
+                self.data.extend(mic.record(constants.sample_rate * int(timeToRecord)))
                 self.stopRecording()
                 self.saveUnclassified()
 
@@ -47,7 +52,7 @@ class Recorder:
         self.saveAudio(filepath)
 
     def saveCommercial(self):
-        filepath = r'C:\Users\Jon\source\repos\peace-ad-quiet\commericals\\'
+        filepath = r'C:\Users\Jon\source\repos\peace-ad-quiet\commercials\\'
         self.saveAudio(filepath)
 
     def saveUnclassified(self):
@@ -60,7 +65,7 @@ class Recorder:
         fullPath = filePath + filename
 
         scaled = np.int16(self.data / np.max(np.abs(self.data)) * 32767) 
-        write(fullPath, self.rate, scaled)
+        write(fullPath, constants.sample_rate, scaled)
         self.data = []
         print("File Saved")
 

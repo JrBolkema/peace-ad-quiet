@@ -3,7 +3,7 @@ from recorder import Recorder
 
 class recorderGUI:
 
-    def open():
+    def open(self):
         layout = [
             [sg.Button("Record")],
             [sg.Text("Time: ",size= (5,1)), sg.InputText()],
@@ -23,7 +23,8 @@ class recorderGUI:
                 break
             # presses the OK button
             elif event == "Record":
-                window.start_thread(lambda: recorder.startRecording(values[0]),('-THREAD-','-THREAD ENDED'))
+                #window.start_thread(lambda: recorder.startRecording(values[0]),('-THREAD-','-THREAD ENDED'))
+                recorder.startRecording(values[0])
             elif event =="Save Commercial":
                 recorder.stopRecording()
                 recorder.saveCommercial()
@@ -33,5 +34,5 @@ class recorderGUI:
 
         window.close()
 
-
+recorderGUI().open()
 

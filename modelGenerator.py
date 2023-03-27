@@ -16,20 +16,21 @@ class ModelGenerator:
         self.getAndPrepareAudio()
         model = self.trainAndCompileModel()
         self.saveModel(model)
+        return model
 
     def getAndPrepareAudio(self):
-        audioHelper = audioHelpers.AudioHelpers()
+        audioHelper = audioHelpers.AudioHelper()
         for file in os.listdir(self.currentDirectory + "\\commercials"):
             filename = os.fsdecode(file)
             if filename.endswith(".wav"):
-                audio_pieces = audioHelper.prepare_audio(self.repo_path + "\\commercials\\" + filename)
+                audio_pieces = audioHelper.prepareAudio(self.repo_path + "\\commercials\\" + filename)
                 self.all_audio += audio_pieces
                 self.classification += ([1]*len(audio_pieces))
 
         for file in os.listdir(self.currentDirectory + "\\content"):
             filename = os.fsdecode(file)
             if filename.endswith(".wav"):
-                audio_pieces = audioHelper.prepare_audio(self.repo_path + "\\content\\" + filename)
+                audio_pieces = audioHelper.prepareAudio(self.repo_path + "\\content\\" + filename)
                 self.all_audio += audio_pieces
                 self.classification += ([0]*len(audio_pieces))
     
