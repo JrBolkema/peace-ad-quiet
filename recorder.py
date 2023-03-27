@@ -7,7 +7,7 @@ import random
 
 
 class Recorder:
-    # speakers = sc.all_speakers()
+    speakers = sc.all_speakers()
     mics = sc.all_microphones(include_loopback=True)
     # get the current default microphone on your system:
     default_mic = mics[0]
@@ -24,7 +24,7 @@ class Recorder:
                 print(f"{i}: {self.mics[i].name}")
             except Exception as e:
                 print(e)
-
+                
     def startRecording(self,timeToRecord = 0):
         print("Recording Started")
         self.recording = True
@@ -35,19 +35,32 @@ class Recorder:
             else:
                 self.data.extend(mic.record(self.rate * int(timeToRecord)))
                 self.stopRecording()
-                self.saveAudio()
+                self.saveUnclassified()
 
     def stopRecording(self):
         self.recording = False
         print("Recording Stopped")
 
-    def saveAudio(self):
+
+    def saveContent(self):
+        filepath = r'C:\Users\Jon\source\repos\peace-ad-quiet\content\\'
+        self.saveAudio(filepath)
+
+    def saveCommercial(self):
+        filepath = r'C:\Users\Jon\source\repos\peace-ad-quiet\commericals\\'
+        self.saveAudio(filepath)
+
+    def saveUnclassified(self):
+        filepath = r'C:\Users\Jon\source\repos\peace-ad-quiet\unclassified\\'
+        self.saveAudio(filepath)
+
+    def saveAudio(self,filePath):
         timestr = time.strftime("%Y%m%d_%H%M%S")
         filename = f"output_{timestr}.wav"
-        filepath = r'C:\Users\Jon\source\repos\peace-ad-quiet\commericals\\' + filename
+        fullPath = filePath + filename
 
         scaled = np.int16(self.data / np.max(np.abs(self.data)) * 32767) 
-        write(filepath, self.rate, scaled)
+        write(fullPath, self.rate, scaled)
         self.data = []
         print("File Saved")
 
