@@ -1,0 +1,23 @@
+{
+  "doc": "Schema for a mute or unmute event",
+  "fields": [
+    {
+      "doc": "A models confidence that a sample is not a commercial.",
+      "name": "SampleConfidence",
+      "type": "float"
+    },
+    {
+      "doc": "Timestamp when the sample was taken.",
+      "logicalType": "timestamp-millis",
+      "name": "Timestamp",
+      "type": "long"
+    },
+    {
+      "doc": "OS that the request came from.",
+      "name": "OperatingSystem",
+      "type": "string"
+    }
+  ],
+  "name": "Unmute",
+  "type": "record"
+}

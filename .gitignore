@@ -1,6 +1,7 @@
 *.wav
 *.ini
 *.h5
+*.properties
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
