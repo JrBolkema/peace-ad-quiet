@@ -46,8 +46,8 @@ def main():
 
         print(f'Confidence: {confidence}')
 
-        kafkaSchema = Log(confidence = confidence)
 
+        kafkaSchema = Log(confidence = confidence)
         if(confidence < 2): # probably no audio, don't poll again
             print("No Audio Detected. Pausing.")
 
@@ -60,13 +60,11 @@ def main():
 def handleMute(volume, producer, kafkaSchema):
     print("Muting...")
     volume.SetMute(1, None)
-    # create class and schema for values
     producer.produceMuteLog("",kafkaSchema)
 
 def handleUnmute(volume, producer, kafkaSchema):
     print("Unmuting...")
     volume.SetMute(0, None)
-    # create class and schema for values
     producer.produceUnmuteLog("", kafkaSchema)
 
 main()
